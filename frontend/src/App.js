@@ -3,6 +3,7 @@ import './App.css';
 import Header from './components/Header';
 import ProductForm from './components/ProductForm';
 import ProductList from './components/ProductList';
+import ProductCard from './components/ProductCard';
 import { productAPI } from './services/api';
 
 function App() {
