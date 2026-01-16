@@ -21,7 +21,7 @@ pipeline {
             steps {
                 echo '📥 Checking out code from repository...'
                 checkout scm
-                sh 'ls -la'
+                bat 'dir'
             }
         }
 
@@ -30,11 +30,10 @@ pipeline {
                 echo '🔨 Building Backend Docker Image...'
                 dir('backend') {
                     script {
-                        sh 'ls -la'
-                        // Build backend image and tag it
+                        bat 'dir'
                         def dockerImageBackend = docker.build("${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}")
-                        dockerImageBackend.push()           // push versioned tag
-                        dockerImageBackend.push('latest')   // push latest tag
+                        dockerImageBackend.push()
+                        dockerImageBackend.push('latest')
                     }
                 }
             }
@@ -45,11 +44,10 @@ pipeline {
                 echo '🔨 Building Frontend Docker Image...'
                 dir('frontend') {
                     script {
-                        sh 'ls -la'
-                        // Build frontend image and tag it
+                        bat 'dir'
                         def dockerImageFrontend = docker.build("${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}")
-                        dockerImageFrontend.push()           // push versioned tag
-                        dockerImageFrontend.push('latest')   // push latest tag
+                        dockerImageFrontend.push()
+                        dockerImageFrontend.push('latest')
                     }
                 }
             }
@@ -67,11 +65,9 @@ pipeline {
 
         always {
             echo '🧹 Cleaning up...'
-            // Remove test containers
-            sh '''
-                docker ps -a | grep test-backend | awk '{print $1}' | xargs -r docker rm -f || true
-            '''
-            // Clean workspace
+            bat """
+                for /F "tokens=1" %%i in ('docker ps -a ^| findstr test-backend') do docker rm -f %%i
+            """
             cleanWs()
         }
     }
