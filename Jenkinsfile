@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         // Docker Configuration
         DOCKER_REGISTRY = 'docker.io'
@@ -8,14 +8,14 @@ pipeline {
         DOCKER_IMAGE_BACKEND = 'your-dockerhub-username/product-backend'
         DOCKER_IMAGE_FRONTEND = 'your-dockerhub-username/product-frontend'
         IMAGE_TAG = "${BUILD_NUMBER}"
-        
+
         // Application Configuration
         APP_NAME = 'product-management-app'
         DEPLOY_SERVER = '3.145.72.236'
         DEPLOY_USER = 'root'
         SSH_CREDENTIALS_ID = 'aws-server-ssh-key'
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -24,7 +24,7 @@ pipeline {
                 sh 'ls -la'
             }
         }
-        
+
         stage('Build Backend') {
             steps {
                 echo '🔨 Building Backend Docker Image...'
@@ -32,12 +32,13 @@ pipeline {
                     script {
                         sh 'ls -la'
                         dockerImageBackend = docker.build("${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}")
-                        docker.build("${DOCKER_IMAGE_BACKEND}:latest")
+                        dockerImageBackend.push()          // push versioned image
+                        dockerImageBackend.push('latest')  // push latest tag
                     }
                 }
             }
         }
-        
+
         stage('Build Frontend') {
             steps {
                 echo '🔨 Building Frontend Docker Image...'
@@ -45,32 +46,13 @@ pipeline {
                     script {
                         sh 'ls -la'
                         dockerImageFrontend = docker.build("${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}")
-                        docker.build("${DOCKER_IMAGE_FRONTEND}:latest")
+                        dockerImageFrontend.push()          // push versioned image
+                        dockerImageFrontend.push('latest')  // push latest tag
                     }
                 }
             }
         }
-        
-    
+    } // end stages
+
     post {
         success {
-            echo '✅ Pipeline completed successfully!'
-            // Send success notification (optional)
-        }
-        
-        failure {
-            echo '❌ Pipeline failed!'
-            // Send failure notification (optional)
-        }
-        
-        always {
-            echo '🧹 Cleaning up...'
-            // Clean up test containers
-            sh '''
-                docker ps -a | grep test-backend | awk '{print $1}' | xargs -r docker rm -f || true
-            '''
-            // Clean workspace
-            cleanWs()
-        }
-    }
-}
