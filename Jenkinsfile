@@ -31,9 +31,10 @@ pipeline {
                 dir('backend') {
                     script {
                         sh 'ls -la'
-                        dockerImageBackend = docker.build("${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}")
-                        dockerImageBackend.push()          // push versioned image
-                        dockerImageBackend.push('latest')  // push latest tag
+                        // Build backend image and tag it
+                        def dockerImageBackend = docker.build("${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}")
+                        dockerImageBackend.push()           // push versioned tag
+                        dockerImageBackend.push('latest')   // push latest tag
                     }
                 }
             }
@@ -45,14 +46,33 @@ pipeline {
                 dir('frontend') {
                     script {
                         sh 'ls -la'
-                        dockerImageFrontend = docker.build("${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}")
-                        dockerImageFrontend.push()          // push versioned image
-                        dockerImageFrontend.push('latest')  // push latest tag
+                        // Build frontend image and tag it
+                        def dockerImageFrontend = docker.build("${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}")
+                        dockerImageFrontend.push()           // push versioned tag
+                        dockerImageFrontend.push('latest')   // push latest tag
                     }
                 }
             }
         }
-    } // end stages
+    }
 
     post {
         success {
+            echo '✅ Pipeline completed successfully!'
+        }
+
+        failure {
+            echo '❌ Pipeline failed!'
+        }
+
+        always {
+            echo '🧹 Cleaning up...'
+            // Remove test containers
+            sh '''
+                docker ps -a | grep test-backend | awk '{print $1}' | xargs -r docker rm -f || true
+            '''
+            // Clean workspace
+            cleanWs()
+        }
+    }
+}
