@@ -82,6 +82,7 @@ pipeline {
                 dir('backend') {
                     sh '''
                         set -e
+                        python3 -m venv venv
                         venv/bin/activate
                         echo "Starting backend server..."
                         python3 app.py &
