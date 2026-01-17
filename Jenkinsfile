@@ -73,7 +73,7 @@ pipeline {
                     npm config set fetch-retry-maxtimeout 120000
     
                     echo "Installing dependencies..."
-                    npm ci --no-audit --no-fund
+                    npm install --no-audit --no-fund
     
                     echo "Frontend environment setup complete!"
                 '''
