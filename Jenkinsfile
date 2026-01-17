@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         // Docker Configuration
-        DOCKER_REGISTRY = 'docker.io'
+        DOCKER_REGISTRY = 'https://docker.io'
         DOCKER_CREDENTIALS_ID = 'Ik@124421'
         DOCKER_IMAGE_BACKEND = 'akhan101/product-backend'
         DOCKER_IMAGE_FRONTEND = 'akhan101/product-frontend'
