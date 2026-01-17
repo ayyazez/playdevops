@@ -4,7 +4,7 @@ pipeline {
     environment {
         // Application Configuration
         APP_NAME = 'product-management-app'
-        DEPLOY_SERVER = '18.216.183.101'
+        DEPLOY_SERVER = '18.218.197.108'
         DEPLOY_USER = 'root'
         DEPLOY_PATH = '/root/project/playdevops'
         SSH_CREDENTIALS_ID = 'aws-server-ssh-key'
@@ -97,8 +97,8 @@ pipeline {
                         sleep 60
 
                         echo "Testing API endpoints..."
-                        curl -f http://18.216.183.101:5000/api/health
-                        curl -f http://18.216.183.101:5000/api/products
+                        curl -f http://18.218.197.108:5000/api/health
+                        curl -f http://18.218.197.108:5000/api/products
 
                         echo "Build Successfully!"
 
