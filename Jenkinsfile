@@ -32,29 +32,23 @@ pipeline {
             steps {
                 echo '🔧 Setting up Python virtual environment...'
                 dir('backend') {
-                    sh '''
-                        #!/bin/bash
-                        set -e
-                        echo "Checking Python version..."
-                        python3 --version
+                   sh '''
+                set -e
 
-                        echo "Creating virtual environment..."
-                        # rm -rf venv
-                        python3 -m venv venv
-                      # apt install python3-venv python3-full -y
+                echo "Checking Python version..."
+                python3 --version
 
-                        echo "Activating virtual environment..."
-                       source venv/bin/activate
-                       # . venv/bin/activate
+                echo "Creating virtual environment..."
+                python3 -m venv venv
 
-                        echo "Upgrading pip..."
-                        pip install --upgrade pip
+                echo "Upgrading pip..."
+                venv/bin/pip install --upgrade pip
 
-                        echo "Installing dependencies..."
-                        pip install -r requirements.txt
+                echo "Installing dependencies..."
+                venv/bin/pip install -r requirements.txt
 
-                        echo "Backend environment setup complete!"
-                    '''
+                echo "Backend environment setup complete!"
+            '''
                 }
             }
         }
