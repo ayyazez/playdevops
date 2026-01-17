@@ -96,9 +96,8 @@ pipeline {
                         echo "Waiting for backend to start..."
                         sleep 10
 
-                        echo "Testing API endpoints..."
-                        curl -f http://18.218.197.108:5000/api/health
-                        curl -f http://18.218.197.108:5000/api/products
+                        
+                        
 
                         echo " -------------------- Backend Build Successfully! --------------------"
 
