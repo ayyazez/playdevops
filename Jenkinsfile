@@ -85,7 +85,7 @@ pipeline {
                         python3 -m venv venv
                         venv/bin/activate
                         echo "Starting backend server..."
-                        python3 app.py &
+                        venv/bin/python3 app.py &
                         BACKEND_PID=$!
 
                         echo "Waiting for backend to start..."
