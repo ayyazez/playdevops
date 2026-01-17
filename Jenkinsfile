@@ -102,7 +102,7 @@ pipeline {
             steps {
                 echo '📤 Pushing Docker Images to Registry...'
                 script {
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", "${DOCKER_CREDENTIALS_ID}") {
+                    docker.withRegistry() {
                         // Push backend images
                         dockerImageBackend.push("${IMAGE_TAG}")
                         dockerImageBackend.push("latest")
