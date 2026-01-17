@@ -96,8 +96,6 @@ pipeline {
 
                         echo "Build Successfully!"
 
-                        // echo "Stopping backend server..."
-                        // kill $BACKEND_PID
                     '''
                 }
             }
