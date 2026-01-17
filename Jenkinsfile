@@ -94,13 +94,13 @@ pipeline {
                         BACKEND_PID=$!
 
                         echo "Waiting for backend to start..."
-                        sleep 60
+                        sleep 10
 
                         echo "Testing API endpoints..."
                         curl -f http://18.218.197.108:5000/api/health
                         curl -f http://18.218.197.108:5000/api/products
 
-                        echo "Build Successfully!"
+                        echo " -------------------- Backend Build Successfully! --------------------"
 
                     '''
                 }
@@ -117,7 +117,7 @@ pipeline {
                         export REACT_APP_API_URL=http://${DEPLOY_SERVER}:5000/api
                         npm run build
 
-                        echo "Build complete!"
+                        echo "-------------------- Frontend Build complete! --------------------"
                         ls -la build
                     '''
                 }
@@ -216,8 +216,8 @@ pipeline {
         always {
             echo '🧹 Cleaning up...'
             sh '''
-                //pkill -f "python app.py" || true
-                //rm -rf deployment
+                // pkill -f "python app.py" || true
+                // rm -rf deployment
                 echo "Cleanup complete!"
             '''
             cleanWs()
