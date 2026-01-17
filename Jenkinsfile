@@ -82,8 +82,7 @@ pipeline {
                 dir('backend') {
                     sh '''
                         set -e
-                        python3 -m venv venv
-                        venv/bin/activate
+                                 
                         echo "Starting backend server..."
                         venv/bin/python3 app.py &
                         BACKEND_PID=$!
