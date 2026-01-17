@@ -58,24 +58,25 @@ pipeline {
                 echo '🔧 Installing Node.js dependencies...'
                 dir('frontend') {
                     sh '''
-                        set -e
-                        echo "Checking Node version..."
-                        node --version
-                        npm --version
-
-                        echo "Cleaning old files..."
-                        echo "Configuring npm for CI..."
-                        npm config set fetch-retries 5
-                        npm config set fetch-retry-mintimeout 20000
-                        npm config set fetch-retry-maxtimeout 120000
-        
-        
-                        echo "Installing dependencies..."
-                        npm install --no-audit --no-fund
-
-
-                        echo "Frontend environment setup complete!"
-                    '''
+                    set -e
+    
+                    echo "Checking Node and NPM versions..."
+                    node --version
+                    npm --version
+    
+                    echo "Cleaning old files..."
+                    rm -rf node_modules build package-lock.json
+    
+                    echo "Configuring npm for CI..."
+                    npm config set fetch-retries 5
+                    npm config set fetch-retry-mintimeout 20000
+                    npm config set fetch-retry-maxtimeout 120000
+    
+                    echo "Installing dependencies..."
+                    npm ci --no-audit --no-fund
+    
+                    echo "Frontend environment setup complete!"
+                '''
                 }
             }
         }
