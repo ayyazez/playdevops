@@ -4,7 +4,7 @@ pipeline {
     environment {
         // Application Configuration
         APP_NAME = 'product-management-app'
-        DEPLOY_SERVER = '18.218.197.108'
+        DEPLOY_SERVER = '3.144.82.157'
         DEPLOY_USER = 'root'
         DEPLOY_PATH = '/root/project/playdevops'
         SSH_CREDENTIALS_ID = 'aws-server-ssh-key'
