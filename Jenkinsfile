@@ -57,7 +57,7 @@ pipeline {
                 dir('frontend') {
                     sh '''
                         # Run front-end container for testing
-                        docker run -d --name test-frontend -p 3000:3001 ${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}
+                        docker run -d --name test-frontend -p 80:80 ${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}
                         
                         # Wait for container to be ready
                         sleep 10
