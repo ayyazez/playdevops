@@ -64,7 +64,7 @@ pipeline {
                         npm --version
 
                         echo "Cleaning old files..."
-                        // rm -rf node_modules build
+                       
 
                         echo "Installing dependencies..."
                         npm install
@@ -75,7 +75,7 @@ pipeline {
             }
         }
 
-        stage('Buld Backend') {
+        stage('Build Backend') {
             steps {
                 echo '🧪 Building Backend...'
                 dir('backend') {
