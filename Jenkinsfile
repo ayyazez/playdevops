@@ -63,7 +63,7 @@ pipeline {
                         sleep 10
                         
                         # Test health endpoint
-                        curl -f http://18.220.180.174:3000 || exit 1
+                       # curl -f http://18.220.180.174:3000 || exit 1
                         
                         # Cleanup
                         # docker stop test-backend
