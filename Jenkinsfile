@@ -50,6 +50,28 @@ pipeline {
                 }
             }
         }
+
+         stage('Test Frontend') {
+            steps {
+                echo '🧪 Testing Frontend...'
+                dir('frontend') {
+                    sh '''
+                        # Run front-end container for testing
+                        docker run -d --name test-frontend -p 3000:3001 ${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}
+                        
+                        # Wait for container to be ready
+                        sleep 10
+                        
+                        # Test health endpoint
+                        curl -f http://18.220.180.174:3000 || exit 1
+                        
+                        # Cleanup
+                        # docker stop test-backend
+                        # docker rm test-backend
+                    '''
+                }
+            }
+        }
         
         stage('Test Backend') {
             steps {
