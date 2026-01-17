@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-        stage('Setup Frontend Environment') {
+    /*    stage('Setup Frontend Environment') {
             steps {
                 echo '🔧 Installing Node.js dependencies...'
                 dir('frontend') {
@@ -74,6 +74,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('Build Backend') {
             steps {
@@ -81,8 +82,7 @@ pipeline {
                 dir('backend') {
                     sh '''
                         set -e
-                        source venv/bin/activate
-
+                        venv/bin/activate
                         echo "Starting backend server..."
                         python3 app.py &
                         BACKEND_PID=$!
@@ -91,8 +91,8 @@ pipeline {
                         sleep 60
 
                         echo "Testing API endpoints..."
-                        curl -f http://localhost:5000/api/health
-                        curl -f http://localhost:5000/api/products
+                        curl -f http://18.216.183.101:5000/api/health
+                        curl -f http://18.216.183.101:5000/api/products
 
                         echo "Build Successfully!"
 
