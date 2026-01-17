@@ -64,7 +64,7 @@ pipeline {
                         npm --version
 
                         echo "Cleaning old files..."
-                        rm -rf node_modules build
+                        // rm -rf node_modules build
 
                         echo "Installing dependencies..."
                         npm install
