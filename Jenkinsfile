@@ -40,7 +40,7 @@ pipeline {
                         echo "Creating virtual environment..."
                         rm -rf venv
                         python3 -m venv venv
-                        sudo apt install python3-venv python3-full -y
+                        apt install python3-venv python3-full -y
 
                         echo "Activating virtual environment..."
                         source venv/bin/activate
