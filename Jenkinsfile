@@ -216,8 +216,8 @@ pipeline {
         always {
             echo '🧹 Cleaning up...'
             sh '''
-                // pkill -f "python app.py" || true
-                // rm -rf deployment
+                # pkill -f "python app.py" || true
+                # rm -rf deployment
                 echo "Cleanup complete!"
             '''
             cleanWs()
