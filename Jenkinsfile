@@ -4,7 +4,7 @@ pipeline {
     environment {
         // Docker Configuration
         DOCKER_REGISTRY = 'docker.io'
-        DOCKER_CREDENTIALS_ID = 'dckr_pat_xYP0r3UDubGf_-awq2KjHuU5lKg'
+        DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
         DOCKER_IMAGE_BACKEND = 'akhan101/product-backend'
         DOCKER_IMAGE_FRONTEND = 'akhan101/product-frontend'
         IMAGE_TAG = "${BUILD_NUMBER}"
