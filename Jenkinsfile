@@ -53,7 +53,7 @@ pipeline {
             }
         }
 
-    /*    stage('Setup Frontend Environment') {
+        stage('Setup Frontend Environment') {
             steps {
                 echo '🔧 Installing Node.js dependencies...'
                 dir('frontend') {
@@ -64,17 +64,22 @@ pipeline {
                         npm --version
 
                         echo "Cleaning old files..."
-                       
-
+                        echo "Configuring npm for CI..."
+                        npm config set fetch-retries 5
+                        npm config set fetch-retry-mintimeout 20000
+                        npm config set fetch-retry-maxtimeout 120000
+        
+        
                         echo "Installing dependencies..."
-                        npm install
+                        npm install --no-audit --no-fund
+
 
                         echo "Frontend environment setup complete!"
                     '''
                 }
             }
         }
-        */
+        
 
         stage('Build Backend') {
             steps {
