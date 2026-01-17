@@ -33,6 +33,7 @@ pipeline {
                 echo '🔧 Setting up Python virtual environment...'
                 dir('backend') {
                     sh '''
+                        #!/bin/bash
                         set -e
                         echo "Checking Python version..."
                         python3 --version
@@ -40,10 +41,11 @@ pipeline {
                         echo "Creating virtual environment..."
                         rm -rf venv
                         python3 -m venv venv
-                        apt install python3-venv python3-full -y
+                       // apt install python3-venv python3-full -y
 
                         echo "Activating virtual environment..."
-                        source venv/bin/activate
+                       source venv/bin/activate
+                       // . venv/bin/activate
 
                         echo "Upgrading pip..."
                         pip install --upgrade pip
