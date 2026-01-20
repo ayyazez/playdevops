@@ -1,27 +1,14 @@
-# ==============================
-# Stage 1: Get frontend build
-# ==============================
-FROM frontend:latest AS frontend_build
-# (this image is built first)
-
-# ==============================
-# Stage 2: Nginx
-# ==============================
+# nginx/Dockerfile
 FROM nginx:alpine
 
-# Remove default config
+# Remove default configuration
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy nginx configs
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy custom nginx config
 COPY default.conf /etc/nginx/conf.d/default.conf
 
-# Copy frontend build from frontend image
-COPY --from=frontend_build /app/build /usr/share/nginx/html
-
+# Expose HTTP port
 EXPOSE 80
 
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
-
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
