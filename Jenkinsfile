@@ -11,7 +11,7 @@ pipeline {
         
         // Application Configuration
         APP_NAME = 'product-management-app'
-        DEPLOY_SERVER = '18.220.180.174'
+        DEPLOY_SERVER = '192.168.10.172'
         DEPLOY_USER = 'root'
         SSH_CREDENTIALS_ID = 'aws-server-ssh-key'
     }
