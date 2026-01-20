@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         // Docker Configuration
-        DOCKER_REGISTRY = 'docker.io/v1/'
+        DOCKER_REGISTRY = 'https://index.docker.io/v1'
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
         DOCKER_IMAGE_BACKEND = 'akhan101/product-backend'
         DOCKER_IMAGE_FRONTEND = 'akhan101/product-frontend'
