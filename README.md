@@ -1,6 +1,5 @@
 # Project Structure
-
-Playdevops/
+playdevops/
 └── frontend/
 ├── public/
 ├── src/
