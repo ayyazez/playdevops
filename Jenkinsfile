@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         // Docker Configuration
-        DOCKER_REGISTRY = 'https://index.docker.io/v1'
+        DOCKER_REGISTRY = 'https://docker.io/'
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
         DOCKER_IMAGE_BACKEND = 'akhan101/product-backend'
         DOCKER_IMAGE_FRONTEND = 'akhan101/product-frontend'
@@ -102,7 +102,7 @@ pipeline {
             steps {
                 echo '📤 Pushing Docker Images to Registry...'
                 script {
-                    docker.withRegistry( "${DOCKER_REGISTRY}",
+                    docker.withRegistry("",
                     "${DOCKER_CREDENTIALS_ID}") {
                         // Push backend images
                         dockerImageBackend.push("${IMAGE_TAG}")
