@@ -1,4 +1,4 @@
-#Clean Up
+# Clean Up
 
 docker stop nginx backend frontend && docker rm nginx backend frontend && docker network rm app-network
 
