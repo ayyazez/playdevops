@@ -132,6 +132,11 @@ pipeline {
                 script {
                     docker.withRegistry("",
                     "${DOCKER_CREDENTIALS_ID}") {
+                        
+                        // Push nginx images
+                        dockerImageNginx.push("${IMAGE_TAG}")
+                        dockerImageNginx.push("new")
+                        
                         // Push backend images
                         dockerImageBackend.push("${IMAGE_TAG}")
                         dockerImageBackend.push("new")
@@ -140,9 +145,7 @@ pipeline {
                         dockerImageFrontend.push("${IMAGE_TAG}")
                         dockerImageFrontend.push("new")
 
-                        // Push nginx images
-                        DOCKER_IMAGE_Nginx.push("${IMAGE_TAG}")
-                        DOCKER_IMAGE_Nginx.push("new")
+                        
                     }
                 }
             }
@@ -177,20 +180,6 @@ pipeline {
             }
         } */
         
-        stage('Verify Deployment') {
-            steps {
-                echo '✅ Verifying Deployment...'
-                script {
-                    sh """
-                        # Test backend
-                      #  curl -f http://${DEPLOY_SERVER}:5000/api/health || exit 1
-                        
-                        # Test frontend
-                        # curl -f http://${DEPLOY_SERVER}/ || exit 1
-                    """
-                }
-            }
-        }
     }
     
     post {
