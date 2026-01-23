@@ -138,7 +138,7 @@ pipeline {
                         
                         // Push frontend images
                         dockerImageFrontend.push("${IMAGE_TAG}")
-                        dockerImageFrontend.push("latest")
+                        dockerImageFrontend.push("new")
 
                         // Push nginx images
                         DOCKER_IMAGE_Nginx.push("${IMAGE_TAG}")
