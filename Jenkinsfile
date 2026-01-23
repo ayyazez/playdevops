@@ -7,6 +7,8 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'dockerhub-creds'
         DOCKER_IMAGE_BACKEND = 'akhan101/product-backend'
         DOCKER_IMAGE_FRONTEND = 'akhan101/product-frontend'
+        DOCKER_IMAGE_Nginx = 'akhan101/product-nginx'
+        
         IMAGE_TAG = "${BUILD_NUMBER}"
         
         // Application Configuration
@@ -32,7 +34,7 @@ pipeline {
                     script {
                         sh 'ls -la'
                         dockerImageBackend = docker.build("${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}")
-                        docker.build("${DOCKER_IMAGE_BACKEND}:latest")
+                        docker.build("${DOCKER_IMAGE_BACKEND}:new")
                     }
                 }
             }
@@ -45,7 +47,19 @@ pipeline {
                     script {
                         sh 'ls -la'
                         dockerImageFrontend = docker.build("${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}")
-                        docker.build("${DOCKER_IMAGE_FRONTEND}:latest")
+                        docker.build("${DOCKER_IMAGE_FRONTEND}:new")
+                    }
+                }
+            }
+        }
+          stage('Build Nginx') {
+            steps {
+                echo '🔨 Building Nginx Docker Image...'
+                dir('nginx') {
+                    script {
+                        sh 'ls -la'
+                        dockerImageNginx = docker.build("${DOCKER_IMAGE_Nginx}:${IMAGE_TAG}")
+                        docker.build("${DOCKER_IMAGE_Nginx }:new")
                     }
                 }
             }
@@ -56,14 +70,16 @@ pipeline {
                 echo '🧪 Testing Frontend...'
                 dir('frontend') {
                     sh '''
+                        # Create a Docker network for front-end
+                        docker network create app-network
                         # Run front-end container for testing
-                        docker run -d --name test-frontend -p 80:80 ${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}
+                        docker run -d  -p 3001:3000 --name frontend  --network app-network  ${DOCKER_IMAGE_FRONTEND}:${IMAGE_TAG}
                         
                         # Wait for container to be ready
                         sleep 10
                         
                         # Test health endpoint
-                       # curl -f http://18.220.180.174:3000 || exit 1
+                       # curl -f http://18.220.180.174:3001 || exit 1
                         
                         # Cleanup
                         # docker stop test-backend
@@ -72,14 +88,26 @@ pipeline {
                 }
             }
         }
-        
+        stage('Test Nginx') {
+            steps {
+                echo '🧪 Testing Nginx...'
+                dir('nginx') {
+                    sh '''
+                        
+                        # Run nginx containers for testing
+                        docker run -d -p 80:80 --name nginx --network app-network ${DOCKER_IMAGE_Nginx}:${IMAGE_TAG}
+                        
+                    '''
+                }
+            }
+        }
         stage('Test Backend') {
             steps {
                 echo '🧪 Testing Backend...'
                 dir('backend') {
                     sh '''
                         # Run backend container for testing
-                        docker run -d --name test-backend -p 5001:5000 ${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}
+                        docker run -d --name backend -p 5001:5000 ${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}
                         
                         # Wait for container to be ready
                         sleep 10
@@ -106,11 +134,15 @@ pipeline {
                     "${DOCKER_CREDENTIALS_ID}") {
                         // Push backend images
                         dockerImageBackend.push("${IMAGE_TAG}")
-                        dockerImageBackend.push("latest")
+                        dockerImageBackend.push("new")
                         
                         // Push frontend images
                         dockerImageFrontend.push("${IMAGE_TAG}")
                         dockerImageFrontend.push("latest")
+
+                        // Push nginx images
+                        DOCKER_IMAGE_Nginx.push("${IMAGE_TAG}")
+                        DOCKER_IMAGE_Nginx.push("new")
                     }
                 }
             }
