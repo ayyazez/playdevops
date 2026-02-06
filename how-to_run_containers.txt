@@ -16,3 +16,58 @@ docker run -d   --name backend   -p 5001:5000   backend:latest
 
  docker run -d -p 80:80 --name nginx --network app-network  nginx:latest
 
+# Separate db from backend
+
+# How to build images
+
+docker build -t product-database:latest ./database
+
+# Build backend image  
+docker build -t product-backend:latest ./backend
+
+# Build frontend image
+docker build -t product-frontend:latest ./frontend
+
+# Build Nginx image
+
+docker build -t product-nginx:latest .
+
+
+# 1. Create network
+docker network create app-network
+
+# 2. Start database
+docker run -d --name product-database \
+  --network app-network \
+  -p 5432:5432 \
+  -e POSTGRES_DB=productdb \
+  -e POSTGRES_USER=productuser \
+  -e POSTGRES_PASSWORD=productpass \
+  -v db-data:/var/lib/postgresql/data \
+  product-database:latest
+
+# 3. Wait for database (20 seconds)
+sleep 20
+
+# 4. Start backend
+docker run -d --name product-backend \
+  --network app-network \
+  -p 5000:5000 \
+  -e DB_TYPE=postgresql \
+  -e DB_HOST=product-database \
+  -e DB_USER=productuser \
+  -e DB_PASSWORD=productpass \
+  -e DB_NAME=productdb \
+  product-backend:latest
+
+# 5. Start frontend
+docker run -d --name product-frontend \
+  --network app-network \
+  -p 80:80 \
+  product-frontend:latest
+
+# 6. Start Nginx
+docker run -d --name product-nginx \
+  --network app-network \
+  -p 80:80 \
+  product-nginx:latest
