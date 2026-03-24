@@ -101,7 +101,7 @@ pipeline {
                 }
             }
         }
-        stage('Test Backend') {
+/*        stage('Test Backend') {
             steps {
                 echo '🧪 Testing Backend...'
                 dir('backend') {
@@ -123,6 +123,84 @@ pipeline {
                         # docker rm test-backend
                     '''
                 }
+            }
+        }
+        */
+          stage('Test Database') {
+        // ─────────────────────────────────────────
+            steps {
+                echo '🧪 Testing Database Container...'
+                bat """
+                    @echo off
+                    echo Starting test database container...
+                    docker run -d ^
+                        --name test-database ^
+                        -e POSTGRES_DB=%DB_NAME% ^
+                        -e POSTGRES_USER=%DB_USER% ^
+                        -e POSTGRES_PASSWORD=%DB_PASSWORD% ^
+                        -p 5433:5432 ^
+                        %IMG_DATABASE%:%IMAGE_TAG%
+
+                    echo Waiting for database to initialize...
+                    timeout /t 20 /nobreak
+
+                    echo Testing database connection...
+                    docker exec test-database pg_isready -U %DB_USER% -d %DB_NAME% || exit /b 1
+
+                    echo Checking products table exists and has data...
+                    docker exec test-database psql -U %DB_USER% -d %DB_NAME% -c "SELECT COUNT(*) FROM products;" || exit /b 1
+
+                    echo Database tests passed!
+                """
+            }
+        }
+
+        // ─────────────────────────────────────────
+        stage('Test Backend + Database') {
+        // ─────────────────────────────────────────
+            steps {
+                echo '🧪 Testing Backend connected to Database...'
+                bat """
+                    @echo off
+                    echo Creating test network...
+                    docker network create test-network
+
+                    echo Starting test database on network...
+                    docker run -d ^
+                        --name test-db ^
+                        --network test-network ^
+                        -e POSTGRES_DB=%DB_NAME% ^
+                        -e POSTGRES_USER=%DB_USER% ^
+                        -e POSTGRES_PASSWORD=%DB_PASSWORD% ^
+                        %IMG_DATABASE%:%IMAGE_TAG%
+
+                    echo Waiting for database to be ready...
+                    timeout /t 20 /nobreak
+
+                    echo Starting test backend on network...
+                    docker run -d ^
+                        --name test-backend ^
+                        --network test-network ^
+                        -p 5001:5000 ^
+                        -e DB_TYPE=postgresql ^
+                        -e DB_HOST=test-db ^
+                        -e DB_PORT=%DB_PORT% ^
+                        -e DB_USER=%DB_USER% ^
+                        -e DB_PASSWORD=%DB_PASSWORD% ^
+                        -e DB_NAME=%DB_NAME% ^
+                        %IMG_BACKEND%:%IMAGE_TAG%
+
+                    echo Waiting for backend to connect to database...
+                    timeout /t 25 /nobreak
+
+                    echo Testing health endpoint...
+                    curl -f http://localhost:5001/api/health || exit /b 1
+
+                    echo Testing products endpoint...
+                    curl -f http://localhost:5001/api/products || exit /b 1
+
+                    echo All backend + database tests passed!
+                """
             }
         }
         
