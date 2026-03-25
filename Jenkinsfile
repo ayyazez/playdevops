@@ -337,9 +337,7 @@ pipeline {
         always {
             echo '🧹 Cleaning up...'
             // Clean up test containers
-            sh '''
-               cd /root/project/playdevops
-            '''
+            
             // Clean workspace
             cleanWs()
         }
