@@ -8,7 +8,7 @@ pipeline {
         DOCKER_IMAGE_BACKEND = 'akhan101/product-backend'
         DOCKER_IMAGE_FRONTEND = 'akhan101/product-frontend'
         DOCKER_IMAGE_Nginx = 'akhan101/product-nginx'
-        DOCKER_IMAGE_DATABASE = 'postgres:15-alpine'
+        DOCKER_IMAGE_DATABASE = 'postgres'
         
         IMAGE_TAG = "${BUILD_NUMBER}"
         
