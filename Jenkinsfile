@@ -176,12 +176,58 @@ pipeline {
                     docker exec test-database psql -U productuser -d productdb -c "SELECT COUNT(*) FROM products;" || exit 1
                     
                     # Cleanup
-                    # docker stop test-database
-                    # docker rm test-database
+                     docker stop test-database
+                     docker rm test-database
                 '''
             }
         }
-        // ─────────────────────────────────────────
+        stage('Test Backend with Database') {
+            steps {
+                echo '🧪 Testing Backend with Database...'
+                sh '''
+                    # Create network for testing
+                    docker network create test-network || true
+                    
+                    # Start database
+                    docker run -d --name test-db \
+                        --network test-network \
+                        -e POSTGRES_DB=productdb \
+                        -e POSTGRES_USER=productuser \
+                        -e POSTGRES_PASSWORD=productpass \
+                        ${DOCKER_IMAGE_DATABASE}:${IMAGE_TAG}
+                    
+                    # Wait for database
+                    sleep 15
+                    
+                    # Start backend
+                    docker run -d --name test-backend \
+                        --network test-network \
+                        -p 5001:5000 \
+                        -e DB_TYPE=postgresql \
+                        -e DB_USER=productuser \
+                        -e DB_PASSWORD=productpass \
+                        -e DB_HOST=test-db \
+                        -e DB_PORT=5432 \
+                        -e DB_NAME=productdb \
+                        ${DOCKER_IMAGE_BACKEND}:${IMAGE_TAG}
+                    
+                    # Wait for backend to connect to database
+                    sleep 20
+                    
+                    # Test health endpoint
+                    curl -f http://localhost:5001/api/health || exit 1
+                    
+                    # Test products endpoint
+                    curl -f http://localhost:5001/api/products || exit 1
+                    
+                    # Cleanup
+                   # docker stop test-backend test-db
+                   # docker rm test-backend test-db
+                   # docker network rm test-network
+                '''
+            }
+        }
+       /*  // ─────────────────────────────────────────
         stage('Test Backend + Database') {
         // ─────────────────────────────────────────
             steps {
@@ -229,7 +275,7 @@ pipeline {
                 '''
             }
         }
-        
+        */
         stage('Push to Registry') {
             steps {
                 echo '📤 Pushing Docker Images to Registry...'
