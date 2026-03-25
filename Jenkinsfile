@@ -132,13 +132,13 @@ pipeline {
                 echo '🧪 Testing Database Container...'
                 sh '''
                     echo Starting test database container...
-                    docker run -d ^
-                        --name test-database ^
-                        -e POSTGRES_DB=%DB_NAME% ^
-                        -e POSTGRES_USER=%DB_USER% ^
-                        -e POSTGRES_PASSWORD=%DB_PASSWORD% ^
-                        -p 5433:5432 ^
-                        %IMG_DATABASE%:%IMAGE_TAG%
+                docker run -d \
+                --name test-database \
+                -e POSTGRES_DB=$DB_NAME \
+                -e POSTGRES_USER=$DB_USER \
+                -e POSTGRES_PASSWORD=$DB_PASSWORD \
+                -p 5433:5432 \
+                $IMG_DATABASE:$IMAGE_TAG
 
                     echo Waiting for database to initialize...
                     sleep 20
@@ -165,28 +165,28 @@ pipeline {
                     
 
                     echo Starting test database on network...
-                    docker run -d ^
-                        --name test-db ^
-                        --network test-network ^
-                        -e POSTGRES_DB=%DB_NAME% ^
-                        -e POSTGRES_USER=%DB_USER% ^
-                        -e POSTGRES_PASSWORD=%DB_PASSWORD% ^
+                    docker run -d \
+                        --name test-db \
+                        --network test-network \
+                        -e POSTGRES_DB=%DB_NAME% \
+                        -e POSTGRES_USER=%DB_USER% \
+                        -e POSTGRES_PASSWORD=%DB_PASSWORD% \
                         %IMG_DATABASE%:%IMAGE_TAG%
 
                     echo Waiting for database to be ready...
                     sleep 20
 
                     echo Starting test backend on network...
-                    docker run -d ^
-                        --name test-backend ^
-                        --network test-network ^
-                        -p 5001:5000 ^
-                        -e DB_TYPE=postgresql ^
-                        -e DB_HOST=test-db ^
-                        -e DB_PORT=%DB_PORT% ^
-                        -e DB_USER=%DB_USER% ^
-                        -e DB_PASSWORD=%DB_PASSWORD% ^
-                        -e DB_NAME=%DB_NAME% ^
+                    docker run -d \
+                        --name test-backend \
+                        --network test-network \
+                        -p 5001:5000 \
+                        -e DB_TYPE=postgresql \
+                        -e DB_HOST=test-db \
+                        -e DB_PORT=%DB_PORT% \
+                        -e DB_USER=%DB_USER% \
+                        -e DB_PASSWORD=%DB_PASSWORD% \
+                        -e DB_NAME=%DB_NAME% \
                         %IMG_BACKEND%:%IMAGE_TAG%
 
                     echo Waiting for backend to connect to database...
