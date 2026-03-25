@@ -186,7 +186,7 @@ pipeline {
                 echo '🧪 Testing Backend with Database...'
                 sh '''
                     # Create network for testing
-                    docker network create test-network || true
+                    # docker network create test-network || true
                     
                     # Start database
                     docker run -d --name test-db \
@@ -228,15 +228,12 @@ pipeline {
             }
         }
        /*  // ─────────────────────────────────────────
-        stage('Test Backend + Database') {
+        stage('Test Backend + Database old') {
         // ─────────────────────────────────────────
             steps {
                 echo '🧪 Testing Backend connected to Database...'
                 sh '''
-                    
                     echo Creating test network...
-                    
-
                     echo Starting test database on network...
                     docker run -d \
                         --name test-db \
@@ -245,10 +242,8 @@ pipeline {
                         -e POSTGRES_USER=%DB_USER% \
                         -e POSTGRES_PASSWORD=%DB_PASSWORD% \
                         %IMG_DATABASE%:%IMAGE_TAG%
-
                     echo Waiting for database to be ready...
                     sleep 20
-
                     echo Starting test backend on network...
                     docker run -d \
                         --name test-backend \
@@ -261,21 +256,16 @@ pipeline {
                         -e DB_PASSWORD=%DB_PASSWORD% \
                         -e DB_NAME=%DB_NAME% \
                         %IMG_BACKEND%:%IMAGE_TAG%
-
                     echo Waiting for backend to connect to database...
                     sleep 25 
-
                     echo Testing health endpoint...
-                    /* curl -f http://localhost:5001/api/health || exit /b 1 */
-
+                     curl -f http://localhost:5001/api/health || exit /b 1 
                     echo Testing products endpoint...
-                    /* curl -f http://localhost:5001/api/products || exit /b 1 */
-
+                     curl -f http://localhost:5001/api/products || exit /b 1 
                     echo All backend + database tests passed!
                 '''
             }
-        }
-        */
+        }        */
         stage('Push to Registry') {
             steps {
                 echo '📤 Pushing Docker Images to Registry...'
