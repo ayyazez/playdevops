@@ -202,7 +202,7 @@ pipeline {
                     
                     # Start backend
                     docker run -d --name test-backend \
-                        --network test-network \
+                        --network app-network \
                         -p 5001:5000 \
                         -e DB_TYPE=postgresql \
                         -e DB_USER=productuser \
