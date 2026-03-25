@@ -8,6 +8,7 @@ pipeline {
         DOCKER_IMAGE_BACKEND = 'akhan101/product-backend'
         DOCKER_IMAGE_FRONTEND = 'akhan101/product-frontend'
         DOCKER_IMAGE_Nginx = 'akhan101/product-nginx'
+        DOCKER_IMAGE_DB = 'akhan101/product-postgresSQL'
         
         IMAGE_TAG = "${BUILD_NUMBER}"
         
@@ -190,7 +191,7 @@ pipeline {
                     
                     # Start database
                     docker run -d --name test-db \
-                        --network test-network \
+                        --network app-network \
                         -e POSTGRES_DB=productdb \
                         -e POSTGRES_USER=productuser \
                         -e POSTGRES_PASSWORD=productpass \
