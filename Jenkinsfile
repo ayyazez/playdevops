@@ -131,7 +131,6 @@ pipeline {
             steps {
                 echo '🧪 Testing Database Container...'
                 sh '''
-                    
                     echo Starting test database container...
                     docker run -d ^
                         --name test-database ^
@@ -197,7 +196,7 @@ pipeline {
                     /* curl -f http://localhost:5001/api/health || exit /b 1 */
 
                     echo Testing products endpoint...
-                    / *curl -f http://localhost:5001/api/products || exit /b 1 */
+                    /* curl -f http://localhost:5001/api/products || exit /b 1 */
 
                     echo All backend + database tests passed!
                 """
@@ -275,7 +274,7 @@ pipeline {
             echo '🧹 Cleaning up...'
             // Clean up test containers
             sh '''
-               # docker ps -a | grep test-backend | awk '{print $1}' | xargs -r docker rm -f || true
+               cd /root/project/playdevops
             '''
             // Clean workspace
             cleanWs()
