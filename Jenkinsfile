@@ -199,7 +199,7 @@ pipeline {
                     /* curl -f http://localhost:5001/api/products || exit /b 1 */
 
                     echo All backend + database tests passed!
-                """
+                '''
             }
         }
         
