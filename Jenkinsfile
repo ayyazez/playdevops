@@ -195,7 +195,7 @@ pipeline {
                         -e POSTGRES_DB=productdb \
                         -e POSTGRES_USER=productuser \
                         -e POSTGRES_PASSWORD=productpass \
-                        ${DOCKER_IMAGE_DATABASE}:${IMAGE_TAG}
+                        ${DOCKER_IMAGE_DATABASE}:15-alpine
                     
                     # Wait for database
                     sleep 15
