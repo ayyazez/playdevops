@@ -126,7 +126,7 @@ pipeline {
             }
         }
         */
-          stage('Test Database') {
+/*          stage('Test Database old ') {
         // ─────────────────────────────────────────
             steps {
                 echo '🧪 Testing Database Container...'
@@ -153,7 +153,34 @@ pipeline {
                 '''
             }
         }
-
+   */
+    stage('Test Database Connection') {
+            steps {
+                echo '🧪 Testing Database...'
+                sh '''
+                    # Start database container
+                    docker run -d --name test-database \
+                        -e POSTGRES_DB=productdb \
+                        -e POSTGRES_USER=productuser \
+                        -e POSTGRES_PASSWORD=productpass \
+                        -p 5433:5432 \
+                        ${DOCKER_IMAGE_DATABASE}:${IMAGE_TAG}
+                    
+                    # Wait for database to be ready
+                    sleep 15
+                    
+                    # Test database connection
+                    docker exec test-database pg_isready -U productuser -d productdb || exit 1
+                    
+                    # Check if table exists and has data
+                    docker exec test-database psql -U productuser -d productdb -c "SELECT COUNT(*) FROM products;" || exit 1
+                    
+                    # Cleanup
+                    # docker stop test-database
+                    # docker rm test-database
+                '''
+            }
+        }
         // ─────────────────────────────────────────
         stage('Test Backend + Database') {
         // ─────────────────────────────────────────
