@@ -140,16 +140,16 @@ pipeline {
                 -p 5433:5432 \
                 $IMG_DATABASE:$IMAGE_TAG
 
-                    echo Waiting for database to initialize...
-                    sleep 20
+            echo "Waiting for database to initialize..."
+            sleep 20
 
-                    echo Testing database connection...
-                    docker exec test-database pg_isready -U %DB_USER% -d %DB_NAME% || exit /b 1
+            echo "Testing database connection..."
+            docker exec test-database pg_isready -U $DB_USER -d $DB_NAME || exit 1
 
-                    echo Checking products table exists and has data...
-                    docker exec test-database psql -U %DB_USER% -d %DB_NAME% -c "SELECT COUNT(*) FROM products;" || exit /b 1
+            echo "Checking products table exists and has data..."
+            docker exec test-database psql -U $DB_USER -d $DB_NAME -c "SELECT COUNT(*) FROM products;" || exit 1
 
-                    echo Database tests passed!
+            echo "Database tests passed!"
                 '''
             }
         }
