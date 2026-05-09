@@ -1,4 +1,4 @@
-# 🚀 PlayDevOps Project
+# PlayDevOps Project
 
 A containerized full-stack application using React (frontend) and Nginx with Docker support.
 
